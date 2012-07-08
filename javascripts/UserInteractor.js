@@ -10,9 +10,9 @@ function UserInteractor() {}
 
 UserInteractor.Tester = new AlphabetTester(Hiragana, Romaji);
 
-UserInteractor.LearnedColor = {red: 0, green: 255, blue: 0};
+UserInteractor.LearnedColor = {red: 102, green: 147, blue: 98};
 
-UserInteractor.UnlearnedColor = {red: 255, green: 0, blue: 0};
+UserInteractor.UnlearnedColor = {red: 220, green: 48, blue: 35};
 
 UserInteractor.update_test_symbol = function() {
   document.getElementById('test_symbol').textContent = UserInteractor.TestSymbol;
@@ -25,7 +25,6 @@ UserInteractor.update_open_symbols = function() {
     item = document.createElement("li");
     item.id = item_id;
     item.textContent = UserInteractor.TestSymbol;
-    item.className += " open_symbols";
     
     document.getElementById('open_symbols').appendChild(item);
   }
