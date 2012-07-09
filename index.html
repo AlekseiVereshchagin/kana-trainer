@@ -20,7 +20,7 @@
 				<h1>Тренажер для изучения Хираганы</h1>
 			</header>
 			<div id="content">
-				<div class="tabber">
+				<div id="main-tabs" class="tabber">
 					<div id="training" class="tabbertab" title="Тренировка">
 						<div id="test-panel">
 							<div id="test_symbol"></div>
@@ -29,13 +29,27 @@
 						<ul id="open_symbols"></ul>
 					</div>
 					<div id="options" class="tabbertab" title="Опции">
-						<p>
-							Изучаемый алфавит: <br>
-							<input type="radio" name="alph-opt" value="Hiragana" checked>
-							Хирагана <br>
-							<input type="radio" name="alph-opt" value="Katakana">
-							Катакана <br>
-						</p>
+						<div id="interactor-options">
+							<p>
+								Изучаемый алфавит:
+								<br>
+								<input type="radio" name="test_alphabet" value="Hiragana" checked>
+								Хирагана
+								<br>
+								<input type="radio" name="test_alphabet" value="Katakana">
+								Катакана
+								<br>
+								Проверочный алфавит:
+								<br>
+								<input type="radio" name="check_alphabet" value="Polivanov" checked>
+								Система Поливанова
+								<br>
+								<input type="radio" name="check_alphabet" value="Hepburn">
+								Система Хэпбёрна
+								<br>
+								<input id="interactor-options-save" type="button" value="Сохранить">
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
