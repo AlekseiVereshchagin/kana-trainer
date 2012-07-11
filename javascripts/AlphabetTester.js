@@ -1,6 +1,6 @@
-﻿function AlphabetTester(test_alphabet, check_alphabet) {
-	this.TestAlphabet = test_alphabet;
-	this.CheckAlphabet = check_alphabet;
+﻿function AlphabetTester(length) { //(test_alphabet, check_alphabet) {
+	//this.TestAlphabet = test_alphabet;
+	//this.CheckAlphabet = check_alphabet;
 
 	// this.TestAlphabetMap = new Array();
 	// for (var i = 0; i < test_alphabet.length; i++)
@@ -12,7 +12,7 @@
 
 	var learning_rate = new Array();
 	this.Unlearned = new Array();
-	for ( var i = 0; i < test_alphabet.length; i++) {
+	for ( var i = 0; i < length; i++) {
 		learning_rate[i] = 0;
 		this.Unlearned[i] = i;
 	}
@@ -73,9 +73,8 @@ AlphabetTester.prototype.dec_learn_rate = function(sym_id, dec) {
 	}
 }
 
-AlphabetTester.prototype.test_and_update = function(test_symbol, check_symbol) {
-	var test_id = this.TestAlphabet.indexOf(test_symbol), check_id = this.CheckAlphabet
-			.indexOf(check_symbol), res = test_id == check_id;
+AlphabetTester.prototype.test_and_update = function(test_id, check_id) {
+	var res = test_id == check_id;
 	if (res)
 		this.dec_learn_rate(test_id, this.LearningRateDecrease);
 	else
