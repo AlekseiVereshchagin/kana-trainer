@@ -1,4 +1,8 @@
 ﻿function UserInteractor() {
+	if (!UserInteractor.__instance)
+		UserInteractor.__instance = this;
+	else
+		return UserInteractor.__instance;
 }
 
 UserInteractor.OptionValues = {
@@ -54,10 +58,6 @@ UserInteractor.set_options = function(options) {
 	}
 }
 
-UserInteractor.get_option = function(option_name) {
-	return this.OptionValues[this.Options[option_name]];
-}
-
 UserInteractor.clean_open_symbols = function() {
 	var open_symbols = document.getElementById("open_symbols");
 	while (open_symbols.hasChildNodes()) {
@@ -65,7 +65,7 @@ UserInteractor.clean_open_symbols = function() {
 	}
 }
 
-UserInteractor.init = function(options) {
+UserInteractor.prototype.init = function(options) {
 	this.Options = options;
 	this.Tester = new AlphabetTester(this.get_option("test_alphabet").length);
 	this.LearnedColor = {
@@ -78,27 +78,31 @@ UserInteractor.init = function(options) {
 		green : 48,
 		blue : 35
 	};
-	this.clean_open_symbols();
+	this.constructor.clean_open_symbols();
 	this.update();
 }
 
-UserInteractor.get_test_symbol = function(test_symbol_id) {
+UserInteractor.prototype.get_option = function(option_name) {
+	return this.constructor.OptionValues[this.Options[option_name]];
+}
+
+UserInteractor.prototype.get_test_symbol = function(test_symbol_id) {
 	return this.get_option("test_alphabet")[test_symbol_id];
 }
-UserInteractor.get_correct_check_symbol = function(test_symbol_id) {
+UserInteractor.prototype.get_correct_check_symbol = function(test_symbol_id) {
 	return this.get_option("check_alphabet")[test_symbol_id];
 }
 
-UserInteractor.get_check_symbol_id = function(check_symbol) {
+UserInteractor.prototype.get_check_symbol_id = function(check_symbol) {
 	return this.get_option("check_alphabet").indexOf(check_symbol);
 }
 
-UserInteractor.update_test_symbol = function(symbol_id) {
+UserInteractor.prototype.update_test_symbol = function(symbol_id) {
 	document.getElementById("test_symbol").textContent = this
 			.get_test_symbol(symbol_id);
 }
 
-UserInteractor.update_open_symbol = function(symbol_id) {
+UserInteractor.prototype.update_open_symbol = function(symbol_id) {
 	var item_id = "open_symbols[" + symbol_id + "]";
 	var item = document.getElementById(item_id);
 	if (item == null) {
@@ -127,7 +131,7 @@ UserInteractor.update_open_symbol = function(symbol_id) {
 			+ color.blue + ")";
 }
 
-UserInteractor.update = function() {
+UserInteractor.prototype.update = function() {
 	this.TestSymbolId = this.Tester.get_random_learning_index();
 	// this.TestSymbol = this.get_option("test_alphabet")[this.TestSymbolId];
 	// this.CheckSymbol = this.Tester.CheckAlphabet[this.TestSymbolId];
@@ -135,29 +139,29 @@ UserInteractor.update = function() {
 	this.update_open_symbol(this.TestSymbolId);
 }
 
-UserInteractor.open_symbols_rebuild = function() {
-	this.clean_open_symbols();
-	for (var i = 0; i < this.get_option("test_alphabet").length; i++)
+UserInteractor.prototype.open_symbols_rebuild = function() {
+	this.constructor.clean_open_symbols();
+	for ( var i = 0; i < this.get_option("test_alphabet").length; i++)
 		if (this.Tester.LearningRate.get_value(i) > 0)
 			this.update_open_symbol(i);
 }
 
-UserInteractor.check_symbol_handler = function(event) {
+UserInteractor.prototype.check_symbol_handler = function(event) {
 	if (event.keyCode == 13 || event.which == 13) {
 		var input_dom = document.getElementById("check_symbol");
 		var test_symbol_dom = document.getElementById("test_symbol");
 		var check_symbol = input_dom.value;
-		var res = UserInteractor.Tester.test_and_update(
-				UserInteractor.TestSymbolId, UserInteractor
-						.get_check_symbol_id(check_symbol));
+		var res = this.Tester.test_and_update(this.TestSymbolId, this
+				.get_check_symbol_id(check_symbol));
 		test_symbol_dom.className += res ? " correct" : " uncorrect";
 		input_dom.disabled = true;
-		input_dom.value = UserInteractor
-				.get_correct_check_symbol(UserInteractor.TestSymbolId);
+		input_dom.value = this.get_correct_check_symbol(this.TestSymbolId);
+
+		var that = this;
 		setTimeout(function() {
 			test_symbol_dom.className = test_symbol_dom.className.replace(
 					/(^|\s+)(correct|uncorrect)(?!\S)/, "");
-			UserInteractor.update();
+			that.update();
 			input_dom.value = "";
 			input_dom.disabled = false;
 			input_dom.focus();
@@ -165,6 +169,6 @@ UserInteractor.check_symbol_handler = function(event) {
 	}
 }
 
-UserInteractor.save_options_handler = function() {
-	UserInteractor.init(UserInteractor.get_options());
+UserInteractor.prototype.save_options_handler = function() {
+	this.init(this.constructor.get_options());
 }
