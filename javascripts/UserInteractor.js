@@ -87,11 +87,25 @@ UserInteractor.load_from_json = function(object) {
 	return new_object;
 }
 
+UserInteractor.load_cookie = function() {
+	var val = Cookie.get("UserInteractor");
+	if (val)
+		this.load_from_json(JSON.parse(val));
+}
+
 UserInteractor.prototype.init = function(options) {
 	this.Options = options;
 	this.Tester = new AlphabetTester(this.get_option("test_alphabet").length);
 	this.constructor.clean_open_symbols();
 	this.update();
+}
+
+UserInteractor.prototype.save_cookie = function(expires) {
+	if (!expires) {
+		expires = new Date();
+		expires.setMonth(expires.getMonth() + 1);
+	}
+	Cookie.set("UserInteractor", JSON.stringify(this), {expires: expires});
 }
 
 UserInteractor.prototype.get_option = function(option_name) {
