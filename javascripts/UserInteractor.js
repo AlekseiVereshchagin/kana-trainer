@@ -54,6 +54,8 @@ UserInteractor.get_options = function() {
 		input = inputs[i];
 		if (input.type == "radio" && input.checked)
 			options[input.name] = input.value;
+		else if (input.type == "checkbox")
+			options[input.name] = input.checked;
 	}
 	return options;
 }
@@ -66,6 +68,8 @@ UserInteractor.set_options = function(options) {
 		input = inputs[i];
 		if (input.type == "radio" && input.value == options[input.name])
 			input.checked = true;
+		else if (input.type == "checkbox")
+			input.checked = options[input.name];
 	}
 }
 
@@ -82,15 +86,14 @@ UserInteractor.load_from_json = function(object) {
 	new_object.Tester = AlphabetTester.load_from_json(object.Tester);
 	new_object.TestSymbolId = object.TestSymbolId;
 	new_object.constructor.set_options(new_object.Options);
-	new_object.update_test_symbol(new_object.TestSymbolId);
-	new_object.open_symbols_rebuild();
+	new_object.refrash();
 	return new_object;
 }
 
 UserInteractor.load_cookie = function() {
 	var val = Cookie.get("UserInteractor");
 	if (val)
-		this.load_from_json(JSON.parse(val));
+		return this.load_from_json(JSON.parse(val));
 }
 
 UserInteractor.prototype.init = function(options) {
@@ -98,6 +101,10 @@ UserInteractor.prototype.init = function(options) {
 	this.Tester = new AlphabetTester(this.get_option("test_alphabet").length);
 	this.constructor.clean_open_symbols();
 	this.update();
+}
+UserInteractor.prototype.refrash = function() {
+	this.update_test_symbol(this.TestSymbolId);
+	this.open_symbols_rebuild();
 }
 
 UserInteractor.prototype.save_cookie = function(expires) {
@@ -164,6 +171,8 @@ UserInteractor.prototype.update = function() {
 	// this.CheckSymbol = this.Tester.CheckAlphabet[this.TestSymbolId];
 	this.update_test_symbol(this.TestSymbolId);
 	this.update_open_symbol(this.TestSymbolId);
+	if (this.Options.autosave)
+		this.save_cookie();
 }
 
 UserInteractor.prototype.open_symbols_rebuild = function() {
@@ -197,5 +206,6 @@ UserInteractor.prototype.check_symbol_handler = function(event) {
 }
 
 UserInteractor.prototype.save_options_handler = function() {
-	this.init(this.constructor.get_options());
+	this.Options = this.constructor.get_options();
+	this.refrash();
 }
