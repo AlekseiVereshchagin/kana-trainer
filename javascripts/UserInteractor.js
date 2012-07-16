@@ -34,6 +34,17 @@ UserInteractor.OptionValues = {
 			'wa', 'wo', 'n' ]
 }
 
+UserInteractor.LearnedColor = {
+	red : 102,
+	green : 147,
+	blue : 98
+};
+UserInteractor.UnlearnedColor = {
+	red : 220,
+	green : 48,
+	blue : 35
+};
+
 UserInteractor.get_options = function() {
 	var options = {};
 	var inputs = document.getElementById("interactor-options")
@@ -65,19 +76,20 @@ UserInteractor.clean_open_symbols = function() {
 	}
 }
 
+UserInteractor.load_from_json = function(object) {
+	var new_object = new UserInteractor();
+	new_object.Options = object.Options;
+	new_object.Tester = AlphabetTester.load_from_json(object.Tester);
+	new_object.TestSymbolId = object.TestSymbolId;
+	new_object.constructor.set_options(new_object.Options);
+	new_object.update_test_symbol(new_object.TestSymbolId);
+	new_object.open_symbols_rebuild();
+	return new_object;
+}
+
 UserInteractor.prototype.init = function(options) {
 	this.Options = options;
 	this.Tester = new AlphabetTester(this.get_option("test_alphabet").length);
-	this.LearnedColor = {
-		red : 102,
-		green : 147,
-		blue : 98
-	};
-	this.UnlearnedColor = {
-		red : 220,
-		green : 48,
-		blue : 35
-	};
 	this.constructor.clean_open_symbols();
 	this.update();
 }
@@ -118,10 +130,11 @@ UserInteractor.prototype.update_open_symbol = function(symbol_id) {
 	var start = this.Tester.StartLearningRate;
 	var min = this.Tester.MinLearningRate;
 	if (level > start)
-		var max_color = this.UnlearnedColor, k = (level - start)
+		var max_color = this.constructor.UnlearnedColor, k = (level - start)
 				/ (max - start);
 	else
-		var max_color = this.LearnedColor, k = (start - level) / (start - min);
+		var max_color = this.constructor.LearnedColor, k = (start - level)
+				/ (start - min);
 	var color = {
 		red : Math.floor(max_color.red * k),
 		green : Math.floor(max_color.green * k),

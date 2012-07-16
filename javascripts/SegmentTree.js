@@ -22,6 +22,13 @@
 	}
 }
 
+SegmentTree.load_from_json = function(object) {
+	var new_object = new SegmentTree();
+	new_object.Nodes = object.Nodes;
+	new_object.Offset = object.Offset;
+	return new_object;
+}
+
 SegmentTree.prototype.get_value = function(i) {
 	return this.Nodes[this.Offset + i - 1];
 }

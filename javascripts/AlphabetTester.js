@@ -1,5 +1,11 @@
-﻿function AlphabetTester(length) {
+function AlphabetTester(length) {
 	if (length) {
+		this.StartLearningRate = 11;
+		this.MinLearningRate = 1;
+		this.MaxLearningRate = 21;
+		this.LearningRateDecrease = 1;
+		this.LearningRateIncrease = 2;
+
 		var learning_rate = new Array();
 		this.Unlearned = new Array();
 		for ( var i = 0; i < length; i++) {
@@ -13,11 +19,19 @@
 	}
 }
 
-AlphabetTester.prototype.StartLearningRate = 11;
-AlphabetTester.prototype.MinLearningRate = 1;
-AlphabetTester.prototype.MaxLearningRate = 21;
-AlphabetTester.prototype.LearningRateDecrease = 1;
-AlphabetTester.prototype.LearningRateIncrease = 2;
+AlphabetTester.load_from_json = function(object) {
+	var new_object = new AlphabetTester();
+	new_object.StartLearningRate = object.StartLearningRate;
+	new_object.MinLearningRate = object.MinLearningRate;
+	new_object.MaxLearningRate = object.MaxLearningRate;
+	new_object.LearningRateDecrease = object.LearningRateDecrease;
+	new_object.LearningRateIncrease = object.LearningRateIncrease;
+	new_object.Unlearned = object.Unlearned;
+	new_object.LearningRate = SegmentTree.load_from_json(object.LearningRate);
+	new_object.LearnedCount = object.LearnedCount;
+	new_object.Level = object.Level;
+	return new_object;
+}
 
 AlphabetTester.prototype.get_random_learning_index = function() {
 	return this.LearningRate.prefix(Math.floor(Math.random()
