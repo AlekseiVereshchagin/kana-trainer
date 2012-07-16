@@ -1,25 +1,16 @@
-﻿function AlphabetTester(length) { //(test_alphabet, check_alphabet) {
-	//this.TestAlphabet = test_alphabet;
-	//this.CheckAlphabet = check_alphabet;
-
-	// this.TestAlphabetMap = new Array();
-	// for (var i = 0; i < test_alphabet.length; i++)
-	// this.TestAlphabetMap[test_alphabet[i]] = i;
-
-	// this.CheckAlphabetMap = new Array();
-	// for (var i = 0; i < test_alphabet.length; i++)
-	// this.CheckAlphabetMap[check_alphabet[i]] = i;
-
-	var learning_rate = new Array();
-	this.Unlearned = new Array();
-	for ( var i = 0; i < length; i++) {
-		learning_rate[i] = 0;
-		this.Unlearned[i] = i;
+﻿function AlphabetTester(length) {
+	if (length) {
+		var learning_rate = new Array();
+		this.Unlearned = new Array();
+		for ( var i = 0; i < length; i++) {
+			learning_rate[i] = 0;
+			this.Unlearned[i] = i;
+		}
+		this.LearningRate = new SegmentTree(learning_rate);
+		this.LearnedCount = 0;
+		this.Level = 0;
+		this.level_up();
 	}
-	this.LearningRate = new SegmentTree(learning_rate);
-	this.LearnedCount = 0;
-	this.Level = 0;
-	this.level_up();
 }
 
 AlphabetTester.prototype.StartLearningRate = 11;

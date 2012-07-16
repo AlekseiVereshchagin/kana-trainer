@@ -1,22 +1,24 @@
 ﻿function SegmentTree(array) {
-	this.Nodes = new Array();
+	if (array) {
+		this.Nodes = new Array();
 
-	var n = array.length, m = 1;
-	while (m < n)
-		m *= 2;
+		var n = array.length, m = 1;
+		while (m < n)
+			m *= 2;
 
-	this.Offset = m;
+		this.Offset = m;
 
-	if (n == 0)
-		return;
+		if (n == 0)
+			return;
 
-	for ( var i = m; i < 2 * m; i++)
-		this.Nodes[i - 1] = (i - m < array.length) ? array[i - m] : 0;
-	while (m >= 2) {
-		m >>= 1;
-		for ( var i = 0; i < m; i++)
-			this.Nodes[m + i - 1] = this.Nodes[(m + i) * 2 - 1]
-					+ this.Nodes[(m + i) * 2];
+		for ( var i = m; i < 2 * m; i++)
+			this.Nodes[i - 1] = (i - m < array.length) ? array[i - m] : 0;
+		while (m >= 2) {
+			m >>= 1;
+			for ( var i = 0; i < m; i++)
+				this.Nodes[m + i - 1] = this.Nodes[(m + i) * 2 - 1]
+						+ this.Nodes[(m + i) * 2];
+		}
 	}
 }
 
